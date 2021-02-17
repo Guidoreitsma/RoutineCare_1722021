@@ -43,6 +43,14 @@ Vocabulary = data.table(
 
 
 
-#STEP 5
+#STEP 5 Merge tables vocabulary and Events
 EVENTS<-fread("EVENTS.csv")
 EVENTS
+merge_events <- merge(EVENTS, Vocabulary, all.x=T)
+merge_events[, .N, by=.(Diagnosis)] #Count by different diagnoses, add entries in the datatable, to get a better count.
+
+merge_events<-merge_events[Diagnosis=="GBS"]
+merge_events<-merge_events[start_date_record>20169999]
+merge_events
+
+#Step6

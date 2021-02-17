@@ -29,4 +29,20 @@ data_persons[age < 60, ageband := "41-60"]
 data_persons[age < 40, ageband := "21-40"]
 data_persons[age < 20, ageband := "0-19"]
 
-data_persons
+#STEP 3 Merging the data tables Observation Periods with persons on Persons_id
+merged_set <- merge(data_persons, minIday_OP_followup, all.x=T) 
+
+#STEP 4 Creating a data table with the Diagnosis event codes and vocabulary
+
+Vocabulary = data.table(
+  Diagnosis = c("GBS", "GBS"),
+  event_code = c("357.0", "G61.0"),
+  vocabulary = c("ICD9", "ICD10")
+)
+
+
+
+
+#STEP 5
+EVENTS<-fread("EVENTS.csv")
+EVENTS

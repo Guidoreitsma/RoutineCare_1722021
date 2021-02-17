@@ -32,6 +32,7 @@ data_persons[age < 20, ageband := "0-19"]
 #STEP 3 Merging the data tables Observation Periods with persons on Persons_id
 merged_set <- merge(data_persons, minIday_OP_followup, all.x=T) 
 
+
 #STEP 4 Creating a data table with the Diagnosis event codes and vocabulary
 
 Vocabulary = data.table(
@@ -49,12 +50,30 @@ EVENTS
 merge_events <- merge(EVENTS, Vocabulary, all.x=T)
 merge_events[, .N, by=.(Diagnosis)] #Count by different diagnoses, add entries in the data table, to get a better count.
 
-#merge_events<-merge_events[Diagnosis=="GBS"]
-merge_events<-merge_events[Diagnosis=="possible"]
+merge_events<-merge_events[Diagnosis=="GBS"]
+#merge_events<-merge_events[Diagnosis=="possible"]
 merge_events<-merge_events[start_date_record>20169999]
 merge_events<-unique(merge_events[start_date_record<20210000])
-merge_events<-unique(merge_events$person_id)
+
 merge_events[, .N, by=.(meaning_of_event)]
 merge_events
 
+merge_events[, event_record_vocabulary:= NULL]
+merge_events[, text_linked_to_event_code:= NULL]
+merge_events[, event_free_text:= NULL]
+merge_events[, present_on_admission:= NULL]
+merge_events[, origin_of_event:= NULL]
+merge_events[, end_date_record:= NULL]
+merge_events[, meaning_of_event:= NULL]
+merge_events[, visit_occurrence_id:= NULL]
+merge_events[, visit_occurrence_id:= NULL]
+merge_events[, Diagnosis:= NULL]
+merge_events[, vocabulary:= NULL]
+merge_events[, event_code:= NULL]
 #Step6
+merge_events<-unique(merge_events)
+merge_events<-merge_events[order(person_id, start_date_record),]
+merge_events<-merge_events[!duplicated(merge_events$person_id),]
+merge_events
+
+View(merged_set)
